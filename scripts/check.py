@@ -5,6 +5,17 @@ import numpy as np
 import numpy as np
 
 
+def get_tagged_cell(notebook_path, tag):
+    nb = nbformat.read(notebook_path, as_version=4)
+
+    for cell in nb.cells:
+        if tag in cell.metadata.get("tags", []):
+            return cell.source
+
+    raise ValueError(f"Geen cel gevonden met tag {tag!r}")
+
+
+
 results = []        # Store the results of all checks
 
 # Get python code from tagged cell from the specified notebook file
