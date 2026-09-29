@@ -41,10 +41,10 @@ for sources in source:
 
 
     # Check that there is exactly one function defined in the student's code.
-    if len(functions) != 1:
+    if len(found_functions) != 1:
         raise ValueError(
             f"Expect only one function, "
-            f"but found {len(functions)}."
+            f"but found {len(found_functions)}."
         )
 
     functions.append(found_functions[0])
