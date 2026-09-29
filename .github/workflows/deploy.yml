@@ -35,9 +35,17 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24.x
-      # - uses: python/setup-python@v5
-      #   with:
-      #     python-version: 3.13
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install nbformat numpy
+
       - name: Check output codecells
         run: python scripts/check.py
       - name: Install MyST
