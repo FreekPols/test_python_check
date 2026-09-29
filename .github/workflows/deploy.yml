@@ -35,9 +35,9 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24.x
-      - uses: python/setup-python@v5
-        with:
-          python-version: 3.13
+      # - uses: python/setup-python@v5
+      #   with:
+      #     python-version: 3.13
       - name: Check output codecells
         run: python scripts/check.py
       - name: Install MyST
