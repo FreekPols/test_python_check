@@ -14,17 +14,20 @@ def check(name, func):
         results.append((name, False, str(exc)))
         print(f"FAIL: {name}: {exc}")
 
-array1 = np.array([-5, 0, 5])
-array2 = np.array([-3, 4, 2])
+
+
+
 
 # Voorbeeld
 def check_sol_1(array1 , array2):
-  
     # hier jouw bestaande controle
     assert result.tolist() == [-8, 4, 7]
 
 
-check("sol_check_1", check_sol_1)
+# Checks uitvoeren voor twee gegeven arrays
+array1 = np.array([-5, 0, 5])
+array2 = np.array([-3, 4, 2])
+check("sol_check_1", check_sol_1(array1, array2))
 
 
 # HTML genereren
