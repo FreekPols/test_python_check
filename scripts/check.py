@@ -19,34 +19,35 @@ def get_tagged_cell(notebook_path, tag):
 results = []        # Store the results of all checks
 
 # Get python code from tagged cell from the specified notebook file
-source = get_tagged_cell(
-    "opdracht.ipynb",
-    "sol_check_1"
-)
-
-# Make empty dictionary to hold the namespace after executing the student's code
-namespace = {}
-
-exec(source, namespace)
+source = [
+        get_tagged_cell("opdracht.ipynb",  "sol_check_1"), 
+        get_tagged_cell("opdracht.ipynb",  "sol_check_2")
+        ]
 
 
+functions = []
 
-# Search for the functions defined in the student's code.
-functions = [
-    value
-    for name, value in namespace.items()
-    if callable(value) and not name.startswith("__")
-]
+for sources in source:
+    namespace = {}              # Make empty dictionary to hold the namespace after executing the student's code
+    exec(sources, namespace)
+
+    # Search for the functions defined in the student's code.
+    found_functions = [
+        value
+        for name, value in namespace.items()
+        if callable(value) and not name.startswith("__")
+    ]
 
 
 
-# Check that there is exactly one function defined in the student's code.
-if len(functions) != 1:
-    raise ValueError(
-        f"Verwacht precies één functie in sol_check_1, "
-        f"maar vond er {len(functions)}."
-    )
+    # Check that there is exactly one function defined in the student's code.
+    if len(functions) != 1:
+        raise ValueError(
+            f"Expect only one function, "
+            f"but found {len(functions)}."
+        )
 
+    functions.append(found_functions[0])
 
 # Use the first (and only) function found in the student's code.
 student_func = functions[0]
@@ -86,10 +87,26 @@ def check_sol_1(func):
 
     np.testing.assert_array_equal(result, expected)
 
-
 # do the check for sol_check_1 and store the result in the results list
 
-check("sol_check_1", check_sol_1, student_func)
+check("sol_check_1", check_sol_1, functions[0])
+
+
+# function to do the actual check for sol_check_2
+def check_sol_2(func):
+    
+    array1 = np.array([-5, 0, 5])   # testarrays
+    array2 = np.array([-3, 4, 2])
+
+    result = func(array1, array2)   # use students function
+
+    expected = array1 * array2      # expected result
+
+    np.testing.assert_array_equal(result, expected)
+
+# do the check for sol_check_2 and store the result in the results list
+check("sol_check_2", check_sol_2, functions[1])    
+
 
 
 ##### GENERARTE HTML REPORT #####
