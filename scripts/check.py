@@ -2,42 +2,86 @@ from pathlib import Path
 import html
 import numpy as np
 
-results = []
+import numpy as np
 
+
+results = []        # Store the results of all checks
+
+# Get python code from tagged cell from the specified notebook file
 source = get_tagged_cell(
     "opdracht.ipynb",
     "sol_check_1"
 )
 
+# Make empty dictionary to hold the namespace after executing the student's code
 namespace = {}
+
 exec(source, namespace)
 
-som = namespace["som"]
 
 
+# Search for the functions defined in the student's code.
+functions = [
+    value
+    for name, value in namespace.items()
+    if callable(value) and not name.startswith("__")
+]
+
+
+
+# Check that there is exactly one function defined in the student's code.
+if len(functions) != 1:
+    raise ValueError(
+        f"Verwacht precies één functie in sol_check_1, "
+        f"maar vond er {len(functions)}."
+    )
+
+
+# Use the first (and only) function found in the student's code.
+student_func = functions[0]
+
+# General function to run a check and store the result in the results list.
 def check(name, func, *args):
+
     try:
-        func(*args)
-        results.append((name, True, ""))
-        print(f"PASS: {name}")
+        func(*args)             # do the check
+
+        results.append(
+            (name, True, "")    # if no exception was raised, the check passed
+        )
+
+        print(f"PASS: {name}")  # else copy error message to results and print FAIL
+
     except Exception as exc:
-        results.append((name, False, str(exc)))
+
+        # Store the name of the check, a False value indicating failure, and the exception message in the results list.
+        results.append(
+            (name, False, str(exc))
+        )
+
         print(f"FAIL: {name}: {exc}")
 
 
+
+#  function to do the actual check for sol_check_1
 def check_sol_1(func):
-    array1 = np.array([-5, 0, 5])
+    
+    array1 = np.array([-5, 0, 5])   # testarrays
     array2 = np.array([-3, 4, 2])
 
-    result = func(array1, array2)
+    result = func(array1, array2)   # use students function
 
-    assert result.tolist() == [-8, 4, 7]
+    expected = array1 + array2      # expected result
+
+    np.testing.assert_array_equal(result, expected)
 
 
-check("sol_check_1", check_sol_1, som)
+# do the check for sol_check_1 and store the result in the results list
+
+check("sol_check_1", check_sol_1, student_func)
 
 
-# HTML genereren
+##### GENERARTE HTML REPORT #####
 output = Path("_checks/checks.html")
 output.parent.mkdir(parents=True, exist_ok=True)
 
