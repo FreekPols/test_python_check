@@ -39,7 +39,7 @@ jobs:
         with:
           python-version: 3.13
       - name: Check output codecells
-        run: pythonscripts/check.py
+        run: python scripts/check.py
       - name: Install MyST
         run: npm install -g mystmd
       - name: Build HTML Assets
