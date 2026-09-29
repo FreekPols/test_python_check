@@ -4,10 +4,20 @@ import numpy as np
 
 results = []
 
+source = get_tagged_cell(
+    "opdracht.ipynb",
+    "sol_check_1"
+)
 
-def check(name, func):
+namespace = {}
+exec(source, namespace)
+
+som = namespace["som"]
+
+
+def check(name, func, *args):
     try:
-        func()
+        func(*args)
         results.append((name, True, ""))
         print(f"PASS: {name}")
     except Exception as exc:
@@ -15,19 +25,16 @@ def check(name, func):
         print(f"FAIL: {name}: {exc}")
 
 
+def check_sol_1(func):
+    array1 = np.array([-5, 0, 5])
+    array2 = np.array([-3, 4, 2])
 
+    result = func(array1, array2)
 
-
-# Voorbeeld
-def check_sol_1(array1 , array2):
-    # hier jouw bestaande controle
     assert result.tolist() == [-8, 4, 7]
 
 
-# Checks uitvoeren voor twee gegeven arrays
-array1 = np.array([-5, 0, 5])
-array2 = np.array([-3, 4, 2])
-check("sol_check_1", check_sol_1(array1, array2))
+check("sol_check_1", check_sol_1, som)
 
 
 # HTML genereren
