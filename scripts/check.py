@@ -1,8 +1,8 @@
 from pathlib import Path
+import nbformat
 import html
 import numpy as np
 
-import numpy as np
 
 
 def get_tagged_cell(notebook_path, tag):
