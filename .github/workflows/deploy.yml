@@ -16,5 +16,5 @@ jobs:
     with:
       build_pdf: false
       execute_python: false
-      run_nb_checks: false
-      run_fig_checks: false
+      run_nb_checks: true
+      run_fig_checks: true
